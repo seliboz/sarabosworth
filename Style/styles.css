@@ -1,0 +1,41 @@
+
+body {
+     font-family: Arial, Helvetica, sans-serif;
+     font-size: 15px;
+     color: rgb(0, 0, 0);
+     text-align: center;
+}
+li {
+     font-size: 15px;
+     font-style: italic;
+     font-weight: normal;
+     color: brown;
+     text-align: left;
+}
+ a{
+      color: rgb(10, 52, 2);
+      text-align: left;
+      }
+p{
+     font-size: 15px;
+     font-style: italic;
+     color: blueviolet;
+}
+
+ .resumelistheading {
+    font-weight: bold;
+    font-style: normal;
+ } 
+ .underline  {text-decoration: underline;}
+ .bold {font-weight: bold;}
+ .justify {text-align: justify;}
+
+ .homebg {
+     background-image: url('../images/blue-snow-backround-texture-as-very-nice-christmas.webp');
+     background-position: top right;
+     /* background-repeat; : */
+ }
+
+ .from-scratchbg {
+     background-image: url(../images/pink-dusty.webp)
+ }

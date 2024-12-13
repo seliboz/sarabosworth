@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wordle Clone</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            background-color: #333;
+            color: white;
+            padding: 1em 0;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(5, 50px);
+            gap: 5px;
+            justify-content: center;
+            margin: 20px auto;
+        }
+        .tile {
+            width: 50px;
+            height: 50px;
+            border: 2px solid #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            text-transform: uppercase;
+            background-color: white;
+        }
+        .correct {
+            background-color: #6aaa64;
+            color: white;
+            border-color: #6aaa64;
+        }
+        .present {
+            background-color: #c9b458;
+            color: white;
+            border-color: #c9b458;
+        }
+        .absent {
+            background-color: #787c7e;
+            color: white;
+            border-color: #787c7e;
+        }
+        .keyboard {
+            display: grid;
+            grid-template-columns: repeat(10, 30px);
+            gap: 5px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .key {
+            padding: 5px;
+            border: 1px solid #ccc;
+            background-color: #eee;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .key:hover {
+            background-color: #ddd;
+        }
+        .message {
+            margin: 20px;
+            font-size: 18px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <a href="#">Wordish</a> |
+    <a href="from-scratch.html">From Scratch</a><br><br>
+    <h1>Wordle Clone</h1>
+    <div id="game">
+        <div class="grid" id="grid"></div>
+        <div class="keyboard" id="keyboard"></div>
+        <p class="message" id="message"></p>
+    </div>
+
+    <script>
+        const words = ["apple", "grape", "melon", "peach", "berry"];
+        const answer = words[Math.floor(Math.random() * words.length)];
+        const grid = document.getElementById('grid');
+        const keyboard = document.getElementById('keyboard');
+        const message = document.getElementById('message');
+
+        let currentRow = 0;
+        let currentTile = 0;
+        let guess = "";
+
+        // Initialize grid
+        for (let i = 0; i < 30; i++) {
+            const tile = document.createElement('div');
+            tile.classList.add('tile');
+            grid.appendChild(tile);
+        }
+
+        // Initialize keyboard
+        const keys = "abcdefghijklmnopqrstuvwxyz".split("");
+        keys.forEach((key) => {
+            const button = document.createElement('div');
+            button.classList.add('key');
+            button.textContent = key;
+            button.addEventListener('click', () => handleKeyPress(key));
+            keyboard.appendChild(button);
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (/^[a-zA-Z]$/.test(e.key)) {
+                handleKeyPress(e.key.toLowerCase());
+            } else if (e.key === 'Enter') {
+                submitGuess();
+            } else if (e.key === 'Backspace') {
+                deleteLetter();
+            }
+        });
+
+        function handleKeyPress(key) {
+            if (currentTile < 5) {
+                const tile = grid.children[currentRow * 5 + currentTile];
+                tile.textContent = key;
+                guess += key;
+                currentTile++;
+            }
+        }
+
+        function deleteLetter() {
+            if (currentTile > 0) {
+                currentTile--;
+                const tile = grid.children[currentRow * 5 + currentTile];
+                tile.textContent = "";
+                guess = guess.slice(0, -1);
+            }
+        }
+
+        function submitGuess() {
+            if (guess.length < 5) {
+                message.textContent = "Not enough letters!";
+                return;
+            }
+
+            const rowStart = currentRow * 5;
+            const feedback = Array(5).fill('absent');
+
+            for (let i = 0; i < 5; i++) {
+                if (guess[i] === answer[i]) {
+                    feedback[i] = 'correct';
+                } else if (answer.includes(guess[i])) {
+                    feedback[i] = 'present';
+                }
+            }
+
+            feedback.forEach((status, index) => {
+                const tile = grid.children[rowStart + index];
+                tile.classList.add(status);
+            });
+
+            if (guess === answer) {
+                message.textContent = "You guessed it!";
+                return;
+            }
+
+            currentRow++;
+            currentTile = 0;
+            guess = "";
+
+            if (currentRow === 6) {
+                message.textContent = `Game over! The word was "${answer}".`;
+            }
+        }
+    </script>
+</body>
+</html>
